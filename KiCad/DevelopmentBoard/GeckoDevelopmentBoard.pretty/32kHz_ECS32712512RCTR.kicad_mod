@@ -1,0 +1,233 @@
+(footprint "32kHz_ECS32712512RCTR"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "ECX-12R")
+	(tags "Crystal or Oscillator")
+	(property "Reference" "Y**"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "0d1a49c4-edc1-42fe-b403-64b930af0645")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Value" "32kHz_ECS32712512RCTR"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "0b7d2d1b-baa6-4037-bf16-a95bcde8a9aa")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "18e39371-32ee-4def-9546-777ee1b12a6b")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5b701d42-b518-4612-80b5-4e27a6f51ac9")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "73fc0bca-1e81-4bb0-90f9-be088e1445e6")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -1.35 -0.05)
+		(end -1.35 -0.05)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5a6cb49c-f05e-4715-8f14-95536baf4456")
+	)
+	(fp_line
+		(start -1.35 0.05)
+		(end -1.35 0.05)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "84be7838-5d2b-4672-8318-0570fc8bd823")
+	)
+	(fp_line
+		(start -0.1 -0.6)
+		(end 0.1 -0.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "da29454b-4d80-44c0-b705-60440ef45176")
+	)
+	(fp_line
+		(start -0.1 0.6)
+		(end 0.1 0.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "6b25972a-f299-41fd-95c5-5536fcc94458")
+	)
+	(fp_arc
+		(start -1.35 -0.05)
+		(mid -1.3 0)
+		(end -1.35 0.05)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "7ae16567-0d75-433d-a143-986e3f42b3b5")
+	)
+	(fp_arc
+		(start -1.35 0.05)
+		(mid -1.4 0)
+		(end -1.35 -0.05)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "3eb2d897-ce1a-4adc-8541-0cc77155fad7")
+	)
+	(fp_line
+		(start -1.6 -1.15)
+		(end 1.6 -1.15)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "607c1903-e66c-4f23-9a38-ec40c615165e")
+	)
+	(fp_line
+		(start -1.6 1.15)
+		(end -1.6 -1.15)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "480dc8c9-08e6-4cd3-904c-c540e33a4354")
+	)
+	(fp_line
+		(start 1.6 -1.15)
+		(end 1.6 1.15)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "fd363bbd-2715-4723-9250-61e75ff52ebb")
+	)
+	(fp_line
+		(start 1.6 1.15)
+		(end -1.6 1.15)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "34947f80-5353-4daf-9ce1-0ad360722549")
+	)
+	(fp_line
+		(start -1 -0.6)
+		(end 1 -0.6)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "b7698cfb-08ba-4ba3-bfa3-654684b758c2")
+	)
+	(fp_line
+		(start -1 0.6)
+		(end -1 -0.6)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "2ab591ff-6f6a-42a5-812d-6cc7eec8db71")
+	)
+	(fp_line
+		(start 1 -0.6)
+		(end 1 0.6)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "2e2e4b71-3b3e-44ab-868e-efb9c391d583")
+	)
+	(fp_line
+		(start 1 0.6)
+		(end -1 0.6)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "346a37ed-a87c-469c-9e4d-b99c892a49df")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "2a30d2c9-deac-4eda-b1a9-039f697d92cf")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -0.7 0)
+		(size 0.8 1.3)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "4c1b36dc-58db-4d23-ba31-fb5a02ad5b33")
+	)
+	(pad "2" smd rect
+		(at 0.7 0)
+		(size 0.8 1.3)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "643bd541-496a-4f44-96ee-038a0e2e6018")
+	)
+)

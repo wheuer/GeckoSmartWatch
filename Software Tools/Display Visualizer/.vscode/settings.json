@@ -1,0 +1,7 @@
+{
+    "C_Cpp.default.compilerPath": "c:\\Program Files (x86)\\mingw64\\bin\\gcc.exe",
+    "files.associations": {
+        "stdint.h": "c",
+        "assets.h": "c"
+    }
+}

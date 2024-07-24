@@ -1,0 +1,185 @@
+// // Read the various pins related to charging the battery
+// // Init pins
+// gpio_pin_configure(gpio0_dev, 3,  GPIO_INPUT); // VBUS detect
+// gpio_pin_configure(gpio0_dev, 28, GPIO_INPUT | GPIO_PULL_UP); // Charging
+// gpio_pin_configure(gpio0_dev, 2,  GPIO_INPUT | GPIO_PULL_UP); // Charge Error
+
+// // Poll and print state of pins forever
+// int vbus_detect;
+// int charging;
+// int charge_error;
+// while (1)
+// {
+// 	vbus_detect = gpio_pin_get_raw(gpio0_dev, 3);
+// 	charging = gpio_pin_get_raw(gpio0_dev, 28);
+// 	charge_error = gpio_pin_get_raw(gpio0_dev, 2);
+// 	printf("VBUS: %d\nCharging: %d\nCharge Error: %d\n\n", vbus_detect, charging, charge_error);
+// 	k_msleep(2500);
+// }
+
+gpio_pin_configure(gpio0_dev, LCD_CS_PIN, GPIO_OUTPUT);
+gpio_pin_configure(gpio0_dev, LCD_DC_PIN, GPIO_OUTPUT);
+gpio_pin_configure(gpio0_dev, EFLASH_CS_PIN, GPIO_OUTPUT);
+
+
+// gpio_pin_set(gpio0_dev, EFLASH_CS_PIN, 1); // GPIO PIN CONFIGURE IS PLAYING GAMES... MUST EXPLICTLY SET BACK TO HIGH
+
+//test_ExternalFlash();
+lcd_init();
+// test_ExternalFlash();
+
+// Try all tests
+// test_BMA400();
+// test_fuelGauge();
+// // test_Buzzer();
+// // test_DisplayBacklight();
+test_Display();
+
+// pwm_set(pwm_dev, BUZZER_PWM_CHANNEL, BUZZER_PWM_PERIOD, BUZZER_PWM_PERIOD, NULL);
+// k_msleep(2000);
+
+
+uint32_t brightness = LCD_PWM_PERIOD / 10;
+for (int i = 0; i < 10; i++)
+{
+	// pwm_set(pwm_dev, LCD_PWM_CHANNEL, LCD_PWM_PERIOD, brightness, NULL);
+	pwm_set(pwm_dev, BUZZER_PWM_CHANNEL, BUZZER_PWM_PERIOD, brightness, NULL);
+	brightness = (brightness + LCD_PWM_PERIOD / 10) % LCD_PWM_PERIOD;
+	k_msleep(2000);
+}
+
+pwm_set(pwm_dev, LCD_PWM_CHANNEL, LCD_PWM_PERIOD, LCD_PWM_PERIOD, NULL);
+pwm_set(pwm_dev, BUZZER_PWM_CHANNEL, BUZZER_PWM_PERIOD, 0, NULL);
+
+// while (1)
+// {
+// 	if (updateScreen)
+// 	{
+// 		//float batteryVoltage = 2 * (float) batteryReadVoltage();
+
+// 		GC9A01A_wake(); // This will block for 150 ms
+
+// 		struct tm* mTime;
+// 		mTime = gmtime(&currentSystemTime);
+// 		strftime(timeBuffer, sizeof(timeBuffer), "%I:%M%p", mTime);
+// 		lcd_draw_bitmap((uint8_t*) watchBack, 240, 240, 0, 0);
+// 		lcd_write_str(timeBuffer, 73, 104, LCD_CHAR_SMALL, 255, 255, 255);
+// 		//sprintf(voltageBuffer, "%.2f V", batteryVoltage / 1000.0);
+// 		//lcd_write_str(voltageBuffer, 73, 120, LCD_CHAR_SMALL, 255, 255, 255);
+// 		updateScreen = 0;
+// 	}
+// 	else if (turnOffScreen)
+// 	{	
+// 		GC9A01A_sleep(); // This will block for 150 ms
+// 		turnOffScreen = 0;
+// 	}
+// 	k_msleep(100);
+// }
+
+/* 
+	Current issue where if the BMA400 and LCD are both using SPI then it fails during the LCD writing 
+		-> Just don't call it in the interrupt? Seems to fix it
+	Also clock timer triggers twice every 1 second?
+		-> It's not acutally triggering twice, it just doesn't get scheduled until two seconds have passed 
+*/
+
+// for (int i = 0; i < 10; i++)
+// {
+//     memcpy(screenBuffer, Parrot, 115200);
+//     lcd_draw_bitmap(screenBuffer, 240, 240, 0, 0);
+// 	k_msleep(2000);
+//     memcpy(screenBuffer, lilac_breasted_roller, 115200);
+//     lcd_draw_bitmap(screenBuffer, 240, 240, 0, 0);
+// 	k_msleep(2000);
+// }
+
+
+//lcd_draw_bitmap((uint8_t*) watchBack, 240, 240, 0, 0);
+
+
+
+// for (int i = 0; i < 10; i++)
+// {
+//     memcpy(screenBuffer, Parrot, 115200);
+//     lcd_draw_bitmap(screenBuffer, 240, 240, 0, 0);
+//     memcpy(screenBuffer, lilac_breasted_roller, 115200);
+//     lcd_draw_bitmap(screenBuffer, 240, 240, 0, 0);
+// }
+
+
+// while(1);
+
+// Test out the buzzer
+// gpio_pin_configure(gpio0_dev, 29, GPIO_OUTPUT);
+// gpio_pin_set(gpio0_dev, 29, 1);
+// k_msleep(1500);
+// gpio_pin_set(gpio0_dev, 29, 0);
+// pwm_set(pwm_dev, BUZZER_PWM_CHANNEL, BUZZER_PWM_PERIOD, BUZZER_PWM_PERIOD*0.75, PWM_POLARITY_NORMAL);
+// k_msleep(2000);
+// pwm_set(pwm_dev, BUZZER_PWM_CHANNEL, BUZZER_PWM_PERIOD, 0, PWM_POLARITY_NORMAL);
+
+
+
+
+// Test out the External Flash
+// Read the JEDEC ID, should return the manufactuor ID then the type and size of the memory
+// Datasheet says it should return 0x1F 0x89 0x01
+// uint8_t command = 0x9F;
+// uint8_t response[3];
+// tx_spi_buf[0].buf = &command;
+// tx_spi_buf[0].len = 1;
+// spi_tx_buffer_set.buffers = tx_spi_buf;
+// spi_tx_buffer_set.count = 1;
+
+// rx_spi_buf.buf = response;
+// rx_spi_buf.len = 3;
+// spi_rx_buffer_set.buffers = &rx_spi_buf;
+// spi_rx_buffer_set.count = 1;
+
+// // Send CS low
+// gpio_pin_set(gpio0_dev, EFLASH_CS_PIN, 0);
+
+// // Send the command
+// spi_write(spi_dev, &spi_cfg, &spi_tx_buffer_set);
+
+// // Read back the response
+// spi_read(spi_dev, &spi_cfg, &spi_rx_buffer_set);
+
+// // Set CS high again
+// gpio_pin_set(gpio0_dev, EFLASH_CS_PIN, 1);
+
+// sprintf(buffer, "JEDEC ID: %x %x %x\r\n", response[0], response[1], response[2]);
+// lcd_write_str(buffer, 20, 150, LCD_CHAR_EXTRA_SMALL, 0x00, 0xFF, 0xFF);
+// printk(buffer);
+
+// // Things not testing:
+// //	Reading Battery Voltage (no soldered on)
+// //	PWR Status (not sure the expected values since no battery)
+// //  Antenna/Bluetooth (wait until everything else is working)
+
+
+
+--------------
+
+// System Clock (and BMA400 interrupts)
+// clockInit();
+
+// Power and battery management
+//batteryMonitorInit();
+
+// TODO:
+// External flash
+// ADC
+// Buzzer
+//gpio_pin_configure(gpio0_dev, EFLASH_CS_PIN, GPIO_OUTPUT);
+//gpio_pin_set(gpio0_dev, EFLASH_CS_PIN, 1);
+
+
+// Setup BMA400 for taps and enable pin interrupts
+//configBMAForTaps(); -> Handeled in the system init
+
+gpio_pin_configure(gpio0_dev, BMA_INT1_PIN, GPIO_INPUT);
+gpio_pin_interrupt_configure(gpio0_dev, BMA_INT1_PIN, GPIO_INT_EDGE_RISING);
+gpio_init_callback(&bma400_INT1_callback_t, bma400_INT1_callback, BIT(BMA_INT1_PIN));
+gpio_add_callback(gpio0_dev, &bma400_INT1_callback_t);
+

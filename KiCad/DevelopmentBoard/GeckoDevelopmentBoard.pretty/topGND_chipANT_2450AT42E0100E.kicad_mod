@@ -1,0 +1,256 @@
+(footprint "topGND_chipANT_2450AT42E0100E"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "2450AT42E0100E-6")
+	(tags "Antenna")
+	(property "Reference" "ANT**"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "4f82eb2a-2551-4ea7-bb1c-847d54a40df3")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Value" "topGND_chipANT_2450AT42E0100E"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "676133f6-124e-44fa-bb91-d12f82f90515")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7bfd2e1a-a266-47d0-aed2-a7b667bbd3e0")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "2a24c2bc-2460-4190-894a-f0e0a4d5afb1")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6c54aeb2-636b-4ed2-89ed-98457613037e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -1.75 1.5)
+		(end -1.75 1.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "32e1f49a-74d1-4201-9e7e-318db2786fc4")
+	)
+	(fp_line
+		(start -1.75 1.6)
+		(end -1.75 1.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "29f34531-a84f-4223-b83e-3eea9ad243f9")
+	)
+	(fp_line
+		(start -0.7 -1)
+		(end 0.7 -1)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "05f3b36a-281f-444e-8587-bcb148069284")
+	)
+	(fp_line
+		(start -0.7 1)
+		(end 0.7 1)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c75d3701-5f14-4c7a-8c7c-7aa342913b83")
+	)
+	(fp_arc
+		(start -1.75 1.5)
+		(mid -1.7 1.55)
+		(end -1.75 1.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "a65cd2da-edcf-4653-a896-e8b2633c3204")
+	)
+	(fp_arc
+		(start -1.75 1.6)
+		(mid -1.8 1.55)
+		(end -1.75 1.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "fbe3b7a8-233d-4ab4-9095-f71a53fd4386")
+	)
+	(fp_line
+		(start -3.5 -2.1)
+		(end 3.5 -2.1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "ea005dc9-7ab8-462b-a18b-06bb4302ae40")
+	)
+	(fp_line
+		(start -3.5 2.1)
+		(end -3.5 -2.1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "e73f53f5-8982-4339-aa9c-80fe486e5aa7")
+	)
+	(fp_line
+		(start 3.5 -2.1)
+		(end 3.5 2.1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "a5fcbc1b-277c-48f4-a5d5-4107020ef18b")
+	)
+	(fp_line
+		(start 3.5 2.1)
+		(end -3.5 2.1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "8f92ba15-6d77-40fd-9138-7f0d11c3bb2e")
+	)
+	(fp_line
+		(start -2.5 -1)
+		(end 2.5 -1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "16d0968a-70fb-4e9a-8050-9108130f5baf")
+	)
+	(fp_line
+		(start -2.5 1)
+		(end -2.5 -1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "37c3f5f2-7ddd-4050-a5af-46d03e612a55")
+	)
+	(fp_line
+		(start 2.5 -1)
+		(end 2.5 1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "22e88c49-a4d8-474f-adf8-7b91b0c984dd")
+	)
+	(fp_line
+		(start 2.5 1)
+		(end -2.5 1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "35fbc7ae-4301-4690-84e0-2956c9b317b5")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "a88fb3ba-2aff-4a88-86e8-e4247ef6601c")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -1.75 0.8 90)
+		(size 0.6 1.5)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "3395cf45-848d-4f7d-bbfa-51d036c462c7")
+	)
+	(pad "2" smd rect
+		(at 1.75 0.8 90)
+		(size 0.6 1.5)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "6191558f-836b-4153-95b9-44c5b0c4e165")
+	)
+	(pad "3" smd rect
+		(at 1.75 -0.8 90)
+		(size 0.6 1.5)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "b560ff42-18ea-4445-9453-69d24d58361d")
+	)
+	(pad "4" smd rect
+		(at -1.75 -0.8 90)
+		(size 0.6 1.5)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "a7aa3c56-89c3-4fc3-84af-d4a3ca61ca49")
+	)
+	(model "C:\\Desktop\\Projects\\SamacParts\\SamacSys_Parts.3dshapes\\2450AT42E0100E.stp"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

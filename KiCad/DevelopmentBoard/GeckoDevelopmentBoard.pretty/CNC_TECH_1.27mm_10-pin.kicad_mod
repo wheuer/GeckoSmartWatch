@@ -1,0 +1,202 @@
+(footprint "CNC_TECH_1.27mm_10-pin"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at -0.5 -7.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "fd0b216c-5583-4209-a168-47c903ecf04a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "CNC_TECH_1.27mm_10-pin"
+		(at -0.5 -6 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "d93eb9b5-06e4-47a0-99e3-0fb028f2b9d4")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at -0.5 -7 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "32b8c4b7-99cd-4a9c-9413-281abdf7913b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at -0.5 -7 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b87e9a59-e9e3-4a50-a8e9-88e76c5b8248")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at -0.5 -7 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b06598f2-9a1a-4db1-a73d-66725539c29b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -6.31 -4.5)
+		(end 6.39 -4.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "d8cae042-79ba-4871-9fcb-78ce55804440")
+	)
+	(fp_line
+		(start -6.31 -4)
+		(end 6.39 -4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "30ebb471-0dd9-4813-bede-998f7fea0523")
+	)
+	(fp_line
+		(start -6.31 4.03)
+		(end -6.31 -4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "e94d39d9-07fc-4899-8987-fba5ffbdf7da")
+	)
+	(fp_line
+		(start 6.39 -4)
+		(end 6.39 4.03)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "0e612e21-919d-43d5-aa0e-c9cd47defa2d")
+	)
+	(fp_line
+		(start 6.39 4.03)
+		(end -6.31 4.03)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "e43dc241-82a5-44dc-86a1-64bc02ed2584")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 6 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "9c99d826-9184-4a65-a5e0-a41ae0f6fe25")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at 2.58 -2)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "e0d99866-9a22-4e61-9dfc-4671b1d9f3cb")
+	)
+	(pad "2" smd rect
+		(at 2.58 2.04)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "b4c10cec-0c4f-4770-97aa-be808791ccfc")
+	)
+	(pad "3" smd rect
+		(at 1.31 -2)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "abf35cd1-d79b-4779-9364-a12f63c484da")
+	)
+	(pad "4" smd rect
+		(at 1.31 2.04)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "2dbb8515-0124-4fa7-b60d-13ef444a7523")
+	)
+	(pad "5" smd rect
+		(at 0.04 -2)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "3913900e-8b11-4204-ad2d-0f096935dbb4")
+	)
+	(pad "6" smd rect
+		(at 0.04 2.04)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "eb437dfd-7a4f-4bb0-84f1-6eb75dc9095f")
+	)
+	(pad "7" smd rect
+		(at -1.23 -2)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "c7144974-578c-4361-b229-92bec0c32c77")
+	)
+	(pad "8" smd rect
+		(at -1.23 2.04)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "fb16df34-74a7-4392-a649-98b6c3693064")
+	)
+	(pad "9" smd rect
+		(at -2.5 -2)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "3880c576-42ab-4822-9674-948ca53b0a98")
+	)
+	(pad "10" smd rect
+		(at -2.5 2.04)
+		(size 0.65 2.77)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "dd34353e-e03a-4ee2-98f0-20b871c4fd7d")
+	)
+)

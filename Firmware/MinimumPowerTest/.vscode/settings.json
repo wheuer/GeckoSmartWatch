@@ -1,0 +1,11 @@
+{
+    "nrf-connect.debugging.bindings": {
+        "${workspaceFolder}/build": "Launch build"
+    },
+    "files.associations": {
+        "toolchain.h": "c",
+        "kernel.h": "c",
+        "gcc.h": "c",
+        "poweroff.h": "c"
+    }
+}

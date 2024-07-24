@@ -1,0 +1,71 @@
+# Copyright (c) 2024 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+CONFIG_SOC_SERIES_NRF52X=y
+CONFIG_SOC_NRF52840_QFAA=y
+CONFIG_BOARD_SLOTECH_GECKO_NRF52840=y
+
+# Enable MPU
+CONFIG_ARM_MPU=y
+
+# Enable hardware stack protection
+CONFIG_HW_STACK_PROTECTION=y
+
+# Enable Required Zephyr Stuff
+CONFIG_EVENTS=y
+
+# Enable UART Console
+CONFIG_CONSOLE=n
+CONFIG_SERIAL=n
+CONFIG_UART_CONSOLE=n
+
+# Configure Proper Float Printing
+CONFIG_DK_LIBRARY=y
+CONFIG_NEWLIB_LIBC=y
+CONFIG_NEWLIB_LIBC_FLOAT_PRINTF=y
+CONFIG_NEWLIB_LIBC_NANO=n # Needed to make uint64 work in printf, use %llu or %llx
+CONFIG_USE_SEGGER_RTT=y
+CONFIG_CBPRINTF_FP_SUPPORT=y
+
+# Configure Logging
+# Only show LOG_ERR to avoid console spam, https://docs.nordicsemi.com/bundle/ncs-1.9.2-dev1/page/kconfig/CONFIG_LOG_DEFAULT_LEVEL.html
+CONFIG_LOG=n
+CONFIG_LOG_DEFAULT_LEVEL=1 
+
+# Enable SPI
+CONFIG_SPI=y
+
+# Enable PWM
+CONFIG_PWM=y
+
+# Enable GPIO
+CONFIG_GPIO=y
+
+# Enable ADC
+CONFIG_ADC=y
+
+# Enable Bluetooth
+CONFIG_BT=y
+CONFIG_BT_PERIPHERAL=y
+CONFIG_BT_DEVICE_NAME="Gecko"
+CONFIG_BT_CTLR_TX_PWR_PLUS_8=y # Highest avaliable power
+
+# Still not sure what some of these do, neccesary for large MTU though
+CONFIG_BT_BUF_ACL_RX_SIZE=251
+CONFIG_BT_GATT_CLIENT=y
+CONFIG_BT_ATT_PREPARE_COUNT=2
+CONFIG_BT_CONN_TX_MAX=10
+CONFIG_BT_L2CAP_TX_BUF_COUNT=10
+CONFIG_BT_L2CAP_TX_MTU=247
+CONFIG_BT_BUF_ACL_RX_SIZE=251
+CONFIG_BT_L2CAP_DYNAMIC_CHANNEL=y
+CONFIG_BT_BUF_ACL_TX_SIZE=251
+
+# Enable power management, the nordic folks claim it's no longer needed?
+CONFIG_PM=y
+CONFIG_PM_DEVICE=y
+CONFIG_POWEROFF=y
+CONFIG_PM_DEVICE_RUNTIME=y
+
+
+
+

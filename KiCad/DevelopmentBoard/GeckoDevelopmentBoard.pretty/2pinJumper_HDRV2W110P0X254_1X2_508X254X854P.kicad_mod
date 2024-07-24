@@ -1,0 +1,226 @@
+(footprint "2pinJumper_HDRV2W110P0X254_1X2_508X254X854P"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "61300211121")
+	(tags "Connector")
+	(property "Reference" "J**"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "813632e9-3153-46c8-af61-727979853272")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Value" "2pinJumper_HDRV2W110P0X254_1X2_508X254X854P"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "b3c83a85-ce25-44c1-b501-4152e2900634")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c96f2af7-29d9-4953-822b-ea412453a5dd")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7eb0d488-718d-4227-b036-07a43001a0ab")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b30172f5-31c1-4e12-8546-d630dd93934d")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -1.345 0)
+		(end -1.345 1.345)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "30efffa6-4ba1-4b8f-bd07-8b7468c4b142")
+	)
+	(fp_line
+		(start -1.345 1.345)
+		(end 3.885 1.345)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "84316dc5-afb3-4e3c-b6b6-99b7c16bec33")
+	)
+	(fp_line
+		(start 3.885 -1.345)
+		(end 0 -1.345)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "665893b6-d5b0-4878-8d06-c30ec33a3239")
+	)
+	(fp_line
+		(start 3.885 1.345)
+		(end 3.885 -1.345)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "e8bc3e5c-c824-4221-ac9b-3c98d2d9fda8")
+	)
+	(fp_line
+		(start -1.595 -1.595)
+		(end 4.135 -1.595)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "3e1ccdea-6232-488e-a491-a650d4bf3f03")
+	)
+	(fp_line
+		(start -1.595 1.595)
+		(end -1.595 -1.595)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "602fa33b-d0db-442a-a6e2-1a2970213ec8")
+	)
+	(fp_line
+		(start 4.135 -1.595)
+		(end 4.135 1.595)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "5358039a-3ea2-4681-bc65-937c84ae6f8f")
+	)
+	(fp_line
+		(start 4.135 1.595)
+		(end -1.595 1.595)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "e4c1ed27-a6f6-4469-b807-4e9e7a31e9f8")
+	)
+	(fp_line
+		(start -1.345 -1.345)
+		(end 3.885 -1.345)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "902bdc41-515d-449f-910b-42d86a61a6ea")
+	)
+	(fp_line
+		(start -1.345 1.345)
+		(end -1.345 -1.345)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "9f4b8f1d-e0ec-45c4-a9c5-2525a8727df6")
+	)
+	(fp_line
+		(start 3.885 -1.345)
+		(end 3.885 1.345)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "adb74b1e-1cff-4c62-b23b-9cf2f7bed127")
+	)
+	(fp_line
+		(start 3.885 1.345)
+		(end -1.345 1.345)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "2d12d95f-89d6-4109-904f-55ef1f2b792f")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "3e5e25c9-89d3-4a5b-b5b5-533e5d0f5ce8")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at 0 0)
+		(size 1.95 1.95)
+		(drill 1.3)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "1237fb89-a13c-46a8-80be-a69e49421aea")
+	)
+	(pad "2" thru_hole circle
+		(at 2.54 0)
+		(size 1.95 1.95)
+		(drill 1.3)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "897af49e-0808-41e4-aa4a-e1d951952579")
+	)
+	(model "C:\\Desktop\\Projects\\SamacParts\\SamacSys_Parts.3dshapes\\61300211121.stp"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

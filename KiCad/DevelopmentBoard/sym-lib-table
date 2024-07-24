@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "GeckoDevelopmentBoard")(type "KiCad")(uri "${KIPRJMOD}/GeckoDevelopmentBoard.kicad_sym")(options "")(descr ""))
+)

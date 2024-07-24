@@ -1,0 +1,17 @@
+# Copyright (c) 2024 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_SLOTECH_GECKO_DEVELOPMENT_NRF52840
+
+config BOARD
+	default "slotech_gecko_development_nrf52840"
+
+config BT_CTLR
+   default BT
+
+config BOARD_ENABLE_DCDC
+	bool "DCDC mode"
+	select SOC_DCDC_NRF52X
+	default y
+
+endif

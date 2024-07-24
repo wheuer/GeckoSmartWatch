@@ -1,0 +1,31 @@
+{
+    "files.associations": {
+        "smartwatchservice.h": "c",
+        "nrfx_spim.h": "c",
+        "nrfx.h": "c",
+        "conn.h": "c",
+        "uart.h": "c",
+        "pwm.h": "c",
+        "bma400.h": "c",
+        "lcd.h": "c",
+        "common.h": "c",
+        "assets.h": "c",
+        "bluetooth.h": "c",
+        "stdio.h": "c",
+        "uuid.h": "c",
+        "system.h": "c",
+        "kernel.h": "c",
+        "spi.h": "c",
+        "time.h": "c",
+        "gpio.h": "c",
+        "nrfy_spim.h": "c",
+        "algorithm": "c",
+        "adc.h": "c",
+        "log.h": "c",
+        "battery.h": "c",
+        "gc9a01a.h": "c",
+        "string_view": "c",
+        "ble.h": "c",
+        "clock.h": "c"
+    }
+}
