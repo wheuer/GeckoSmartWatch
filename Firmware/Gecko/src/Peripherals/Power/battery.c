@@ -25,6 +25,11 @@ int batteryMonitorInit(void)
 {
     int error = 0;
     printf("Init Battery Monitoring...");
+
+    // Initalize the charging status pins, they are open-drain so need pullups
+    gpio_pin_configure(gpio0_dev, PWR_CHARGE_ERR_PIN, GPIO_INPUT | GPIO_PULL_UP);
+    gpio_pin_configure(gpio0_dev, PWR_CHARGING_PIN, GPIO_INPUT | GPIO_PULL_UP);
+
 #if !__DEVELOPMENT_BOARD__   
     if (!adc_is_ready_dt(&adc_channel)) {
 		printf(ANSI_COLOR_RED "ERR: ADC device is not ready" ANSI_COLOR_RESET "\n");
@@ -45,8 +50,15 @@ int batteryMonitorInit(void)
 
     printf(ANSI_COLOR_GREEN "OK" ANSI_COLOR_RESET "\n");
 #else
-    // If on development board there is nothing to init
-    printf(ANSI_COLOR_GREEN "OK" ANSI_COLOR_RESET "\n");
+    // If on development board there is nothing more to init
+    if (error)
+    {
+        printf(ANSI_COLOR_RED "ERR" ANSI_COLOR_RESET "\n");
+    }
+    else 
+    {
+        printf(ANSI_COLOR_GREEN "OK" ANSI_COLOR_RESET "\n");
+    }
 #endif 
     return error;
 }

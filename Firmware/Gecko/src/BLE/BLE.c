@@ -13,7 +13,7 @@
 #include "BLE.h"
 
 static char stringBuffer[512]; // To hold notification transfer
-bool bluetoothConnected = false;
+volatile bool bluetoothConnected = false;
 
 Notification activeNotifications[5];
 uint8_t notificationCount = 0;

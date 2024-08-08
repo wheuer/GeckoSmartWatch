@@ -2,12 +2,13 @@
 #define __MAIN__H
 
 #include <zephyr/kernel.h>
+#include <zephyr/drivers/gpio.h>
 #include <nrfx.h>
 #include <time.h>
 #include <stdio.h>
 #include "console.h"
 
-#define __DEVELOPMENT_BOARD__ 0
+#define __DEVELOPMENT_BOARD__ 1
 
 /* 
     Thread priorites:
@@ -71,7 +72,7 @@
 /* Accelerometer (BMA400) Pins*/
 #if __DEVELOPMENT_BOARD__
     #define BMA_INT1_PIN    31 // P0.31
-    #define BMA_INT2_PIN    30  // P0.30
+    #define BMA_INT2_PIN    30 // P0.30
 #else
     #define BMA_CS_PIN      8  // P1.08
     #define BMA_INT1_PIN    11 // P0.11
@@ -103,14 +104,19 @@
 #define PWR_ADC_REFERENCE           ADC_REF_INTERNAL // 0.6 V, which is default
 #define PWR_ADC_ACQUISITION_TIME    ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40) // 40 is the highest
 
-#define PWR_CHARGE_ERR_PIN  4 // P0.04
-#define PWR_CHARGING_PIN    5 // P0.05
+#if __DEVELOPMENT_BOARD__
+    #define PWR_CHARGE_ERR_PIN  2  // P0.02
+    #define PWR_CHARGING_PIN    28 // P0.28
+#else
+    #define PWR_CHARGE_ERR_PIN  4 // P0.04
+    #define PWR_CHARGING_PIN    5 // P0.05
+#endif
 
 extern struct spi_config spi_cfg;
 
 extern time_t currentSystemTime;
 extern bool screenState;
-extern bool bluetoothConnected;
+extern volatile bool bluetoothConnected;
 
 extern struct spi_config spi_cfg;
 
