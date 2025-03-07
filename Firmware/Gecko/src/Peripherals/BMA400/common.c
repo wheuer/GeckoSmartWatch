@@ -21,6 +21,22 @@ int8_t bma400_write_i2c(uint8_t reg_addr, const uint8_t *reg_data, uint32_t leng
     return BMA400_OK;
 }
 #else
+
+struct spi_config spi_cfg = {
+    .frequency = 33554432,
+    .operation = SPI_WORD_SET(8),
+    .slave = 0,
+	// Expand out but still set to null to avoid compiler warning
+    .cs = {
+		.gpio = {
+			.dt_flags = 0,
+			.pin = 0,
+			.port = 0
+		},
+		.delay = 0
+	}
+};
+
 static struct spi_buf_set spi_tx_buffer_set;
 static struct spi_buf tx_spi_buf[2];
 

@@ -3,11 +3,14 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 project(Gecko)
 
+add_subdirectory(drivers)
+
 target_include_directories(app PRIVATE 
     src
     src/BLE
     Peripherals/BMA400
     Peripherals/Display
+    src/lvgl/
 )
 
 target_sources(app PRIVATE 
@@ -15,9 +18,9 @@ target_sources(app PRIVATE
     src/clock.c
     src/testing.c
     
-    # Display
-    src/Peripherals/Display/GC9A01A.c
-    src/Peripherals/Display/LCD.c
+    # Display, now using lvgl and custom zephyr driver so ignore old driver files
+    #src/Peripherals/Display/GC9A01A.c
+    #src/Peripherals/Display/LCD.c
     src/Peripherals/Display/assets.c
     
     # BMA400/Taps
@@ -37,4 +40,10 @@ target_sources(app PRIVATE
 
     # Buzzer
     src/Peripherals/Buzzer/buzzer.c
+
+    # LVGL Layer
+    src/Peripherals/Display/lvgl_layer.c
+
 )
+
+

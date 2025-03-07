@@ -1,0 +1,6 @@
+if BOARD_GECKO_DISPLAY_TEST
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_GECKO_DISPLAY_TEST

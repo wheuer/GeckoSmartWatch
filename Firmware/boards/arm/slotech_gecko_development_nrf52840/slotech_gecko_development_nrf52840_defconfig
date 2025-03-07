@@ -68,4 +68,11 @@ CONFIG_PM_DEVICE=y
 CONFIG_POWEROFF=y
 CONFIG_PM_DEVICE_RUNTIME=y
 
-
+# Add Required Configuration for lvgl
+# Need to have some display driver but since we are using a custom one, use dummy
+CONFIG_DISPLAY=y
+CONFIG_DUMMY_DISPLAY=y
+CONFIG_LVGL=y
+CONFIG_LV_CONF_MINIMAL=y
+CONFIG_LV_Z_MEM_POOL_SIZE=8192
+CONFIG_LV_FONT_MONTSERRAT_14=y

@@ -26,6 +26,21 @@
         "gc9a01a.h": "c",
         "string_view": "c",
         "ble.h": "c",
-        "clock.h": "c"
+        "clock.h": "c",
+        "lvgl.h": "c",
+        "lv_disp.h": "c",
+        "compare": "c",
+        "lv_init.h": "c",
+        "i2c.h": "c",
+        "lvgl_layer.h": "c",
+        "system_error": "c",
+        "buzzer.h": "c",
+        "taps.h": "c",
+        "init.h": "c",
+        "string.h": "c",
+        "console.h": "c",
+        "array": "c",
+        "string": "c",
+        "ctime": "cpp"
     }
 }

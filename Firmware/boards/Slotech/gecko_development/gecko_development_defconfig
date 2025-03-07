@@ -1,0 +1,77 @@
+# Enable MPU
+CONFIG_ARM_MPU=y
+
+# Enable hardware stack protection
+CONFIG_HW_STACK_PROTECTION=y
+
+# Enable Required Zephyr Stuff
+CONFIG_EVENTS=y
+
+# Enable UART Console
+CONFIG_CONSOLE=y
+CONFIG_SERIAL=y
+CONFIG_UART_CONSOLE=y
+
+# Configure Proper Float Printing
+CONFIG_DK_LIBRARY=y
+CONFIG_NEWLIB_LIBC=y
+CONFIG_NEWLIB_LIBC_FLOAT_PRINTF=y
+CONFIG_NEWLIB_LIBC_NANO=n # Needed to make uint64 work in printf, use %llu or %llx
+CONFIG_USE_SEGGER_RTT=y
+CONFIG_CBPRINTF_FP_SUPPORT=y
+
+# Configure Logging
+# Only show LOG_ERR to avoid console spam, https://docs.nordicsemi.com/bundle/ncs-1.9.2-dev1/page/kconfig/CONFIG_LOG_DEFAULT_LEVEL.html
+CONFIG_LOG=y
+CONFIG_LOG_DEFAULT_LEVEL=1 
+
+# Enable SPI
+CONFIG_SPI=y
+
+# Enable PWM
+CONFIG_PWM=y
+
+# Enable GPIO
+CONFIG_GPIO=y
+
+# Enable I2C
+CONFIG_I2C=y
+
+# Enable Bluetooth
+CONFIG_BT=y
+CONFIG_BT_PERIPHERAL=y
+CONFIG_BT_DEVICE_NAME="Gecko"
+CONFIG_BT_CTLR_TX_PWR_PLUS_8=y # Highest avaliable power
+
+# Still not sure what some of these do, neccesary for large MTU though
+CONFIG_BT_BUF_ACL_RX_SIZE=251
+CONFIG_BT_GATT_CLIENT=y
+CONFIG_BT_ATT_PREPARE_COUNT=2
+CONFIG_BT_CONN_TX_MAX=10
+CONFIG_BT_L2CAP_TX_BUF_COUNT=10
+CONFIG_BT_L2CAP_TX_MTU=247
+CONFIG_BT_BUF_ACL_RX_SIZE=251
+# CONFIG_BT_L2CAP_DYNAMIC_CHANNEL=y
+CONFIG_BT_BUF_ACL_TX_SIZE=251
+
+# Enable power management, the nordic folks claim it's no longer needed?
+# CONFIG_PM=y
+CONFIG_PM_DEVICE=y
+CONFIG_POWEROFF=y
+CONFIG_PM_DEVICE_RUNTIME=y
+
+# Display
+CONFIG_DISPLAY=y
+CONFIG_DISPLAY_LOG_LEVEL_ERR=y
+CONFIG_GC9A01=y
+
+# LVGL Configuration (not setting CONFIG_LV_CONF_MINIMAL will enable everything by default)
+CONFIG_LVGL=y
+CONFIG_LV_MEM_CUSTOM=y
+CONFIG_LV_Z_VDB_SIZE=25
+CONFIG_LV_Z_MEM_POOL_SIZE=16384
+CONFIG_LV_Z_FLUSH_THREAD=y
+CONFIG_LV_COLOR_DEPTH_16=y
+CONFIG_LV_COLOR_16_SWAP=y
+CONFIG_LV_FONT_MONTSERRAT_14=y
+CONFIG_LV_FONT_MONTSERRAT_24=y

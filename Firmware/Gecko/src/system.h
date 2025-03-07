@@ -19,10 +19,12 @@
 #define TAPS_THREAD_PRIORITY 5
 
 /* System Events */
-#define SYSTEM_EVENT_DOUBLE_TAP     0x01
-#define SYSTEM_EVENT_SINGLE_TAP     0x02
-#define SYSTEM_EVENT_TIMEOUT        0x04
-#define SYSTEM_EVENT_TIME_UPDATE    0x08
+#define SYSTEM_EVENT_DOUBLE_TAP         0x01
+#define SYSTEM_EVENT_SINGLE_TAP         0x02
+#define SYSTEM_EVENT_TIMEOUT            0x04
+#define SYSTEM_EVENT_TIME_UPDATE        0x08
+#define SYSTEM_EVENT_NEW_NOTIFICATION   0x10
+#define SYSTEM_EVENT_MAIN_MASK          0x1F // 0b'11111
 
 /* Generic Device Labels */
 #define PWM_DEVICE_LABEL        DT_NODELABEL(pwm0)
@@ -55,6 +57,9 @@
 #define BT_DEVICE_NAME_LEN  (sizeof(BT_DEVICE_NAME) - 1)
 
 /* LCD Pins and Port */
+#define DISPLAY_START_BRIGHTNESS    60 // %
+#define BRIGHTNESS_STEP             20 // %
+
 #if __DEVELOPMENT_BOARD__
     #define LCD_RESET_PIN           19 // P0.19
     #define LCD_CS_PIN              22 // P0.22
@@ -117,8 +122,6 @@ extern struct spi_config spi_cfg;
 extern time_t currentSystemTime;
 extern bool screenState;
 extern volatile bool bluetoothConnected;
-
-extern struct spi_config spi_cfg;
 
 extern const struct device* uart0_dev;
 extern const struct device* pwm_dev;

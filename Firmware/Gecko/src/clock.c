@@ -12,7 +12,7 @@ static void clockUpdate(struct k_timer* timer_id)
 	if (currentEpochTime % 60 == 0)
 	{
 		// Minute boundary, alert main application
-		k_event_post(&userInteractionEvent, 0x02);
+		k_event_post(&userInteractionEvent, SYSTEM_EVENT_TIME_UPDATE);
 	}
 }
 
@@ -29,6 +29,7 @@ void getTime(struct tm** timeObject)
 void setEpochTime(uint64_t newEpochTime)
 {
 	currentEpochTime = newEpochTime;
+	k_event_post(&userInteractionEvent, SYSTEM_EVENT_TIME_UPDATE);
 }
 
 void printSystemTime(void)

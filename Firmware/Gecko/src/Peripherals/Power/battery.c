@@ -4,14 +4,14 @@
 #include "system.h"
 
 #if !__DEVELOPMENT_BOARD__
-    #include <zephyr/drivers/adc.h>
-    static const struct adc_dt_spec adc_channel = ADC_DT_SPEC_GET(DT_PATH(zephyr_user));
-    static int16_t buf;
-    static struct adc_sequence sequence = {
-        .buffer = &buf,
-        .buffer_size = sizeof(buf), // buffer size in bytes, not number of samples 
-        .calibrate = true, // Not neccesiary but probably a good idea
-    };
+#include <zephyr/drivers/adc.h>
+static const struct adc_dt_spec adc_channel = ADC_DT_SPEC_GET(DT_PATH(zephyr_user));
+static int16_t buf;
+static struct adc_sequence sequence = {
+    .buffer = &buf,
+    .buffer_size = sizeof(buf), // buffer size in bytes, not number of samples 
+    .calibrate = true, // Not neccesiary but probably a good idea
+};
 #endif 
 
 #include "battery.h"

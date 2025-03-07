@@ -1,0 +1,5 @@
+board:
+  name: gecko_old_hardware
+  vendor: Slotech
+  socs:
+    - name: nrf52840

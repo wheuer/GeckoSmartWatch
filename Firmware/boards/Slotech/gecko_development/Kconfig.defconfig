@@ -1,0 +1,6 @@
+if BOARD_GECKO_DEVELOPMENT
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_GECKO_DEVELOPMENT

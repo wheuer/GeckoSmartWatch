@@ -16,6 +16,7 @@ static struct bma400_sensor_conf bma_conf[2];
 static struct bma400_int_enable int_en[4];
 static struct gpio_callback bma400_INT1_callback_t;
 static struct gpio_callback bma400_INT2_callback_t;
+static struct k_timer double_tap_timer;
 
 struct k_timer screenTimer;
 
@@ -63,7 +64,7 @@ static int configBMAForTaps(void)
 
     /* Modify the desired configurations as per macros
      * available in bma400_defs.h file */
-    // Taps
+    // Taps, set at 200 Hz data rate
     bma_conf[0].param.tap.int_chan = BMA400_INT_CHANNEL_1;
     bma_conf[0].param.tap.axes_sel = BMA400_TAP_X_AXIS_EN | BMA400_TAP_Y_AXIS_EN | BMA400_TAP_Z_AXIS_EN;
     bma_conf[0].param.tap.sensitivity = BMA400_TAP_SENSITIVITY_0;
@@ -246,11 +247,24 @@ static int configBMAForTaps(void)
 //     return result;
 // }
 
+static void singleTapCallback(struct k_timer* timer_id)
+{
+    // If this callback is ever triggered, then the timer expired without a double tap
+    // This just means we got a real single tap
+    printf("Single Tap\n");
+    k_event_post(&userInteractionEvent, SYSTEM_EVENT_SINGLE_TAP);
+    k_timer_stop(&double_tap_timer);
+}
+
 void tapsThread(void* p1, void* p2, void* p3)
 {
     // Wait on tap interrupts, then handle them
     uint32_t triggeredEvent;
     uint16_t mInterruptStatus;
+
+    // Setup a timer to distinguish between single taps and double taps
+    k_timer_init(&double_tap_timer, singleTapCallback, NULL);
+
     for (;;)
     {
         triggeredEvent = k_event_wait(&tapsEvent, 0x01, true, K_FOREVER);
@@ -258,23 +272,29 @@ void tapsThread(void* p1, void* p2, void* p3)
         {
             // See what triggered the interrupt, either a single tap or a double tap
             // A double tap will always follow a single tap so need to timeout before asserting the tap event
-            printf("BMA400 Interrupt: ");
+            //printf("BMA400 Interrupt: ");
             bma400_get_interrupt_status(&mInterruptStatus, &bma);
             
             // Handle triggered interrupts
             if (mInterruptStatus & BMA400_ASSERTED_S_TAP_INT)
             {
-                printf("Single Tap\n");
+                // BMA is configured to wait 60 data samples to register a double tap, samples are taken at 200Hz
+                // So, 300ms between single and double, lets allow for 350 ms
+                // Start a timeout of 350 ms before registering, if a double comes in that time ignore the single
+                k_timer_start(&double_tap_timer, K_MSEC(350), K_MSEC(350));
             } 
             
             if (mInterruptStatus & BMA400_ASSERTED_D_TAP_INT)
             {
-                printf("Double tap interrupt\n");
+                // We got a double tap, we need to cancel the first single tap and register the double
+                k_timer_stop(&double_tap_timer);
+                k_event_post(&userInteractionEvent, SYSTEM_EVENT_DOUBLE_TAP);
+                printf("Double tap\n");
             }
             
             if (mInterruptStatus & BMA400_ASSERTED_ORIENT_CH)
             {
-                printf("Orientation change\n");
+                printf("Orientation change (Not handeled)\n");
             }
 
             // Re-enable BMA400 interrupt by re-initializing gpio interrupt  

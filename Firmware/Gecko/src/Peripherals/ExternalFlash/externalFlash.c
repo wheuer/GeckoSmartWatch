@@ -105,6 +105,7 @@ int externalFlashInit(void)
 {
     int error;
     printf("Init External Flash...");
+
     error = gpio_pin_configure(gpio0_dev, EFLASH_CS_PIN, GPIO_OUTPUT);
     error += gpio_pin_set(gpio0_dev, EFLASH_CS_PIN, 1);
     if (error)

@@ -1,0 +1,6 @@
+if BOARD_GECKO_OLD_HARDWARE
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_GECKO_OLD_HARDWARE

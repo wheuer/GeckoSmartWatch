@@ -1,0 +1,117 @@
+/dts-v1/;
+#include <nordic/nrf52840_qfaa.dtsi>
+#include "gecko_development-pinctrl.dtsi"
+
+/ {
+	model = "Slotech Gecko Development nRF52840 Updated 2025";
+	compatible = "Slotech,gecko-development";
+
+	chosen {
+		zephyr,display = &gc9a01;
+		zephyr,console = &uart0;
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+	};
+
+};
+
+&uart0 {
+	compatible = "nordic,nrf-uarte";
+	status = "okay";
+	current-speed = <115200>;
+	// hw-flow-control;
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-1 = <&uart0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&spi3 {
+	status = "okay";
+	compatible = "nordic,nrf-spim";
+	pinctrl-0 = <&spi3_default>;
+	pinctrl-1 = <&spi3_sleep>;
+	pinctrl-names = "default", "sleep";
+	clock-frequency = <DT_FREQ_M(32)>;
+	cs-gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
+				// <&gpio0 12 GPIO_ACTIVE_LOW>; // Figure out later
+
+	gc9a01: gc9a01@0 {
+		compatible = "buydisplay,gc9a01";
+		status = "okay";
+		spi-max-frequency = <DT_FREQ_M(32)>;
+		reg = <0>;
+		width = <240>;
+		height = <240>;
+		pwms = <&pwm0 0 PWM_USEC(500) PWM_POLARITY_NORMAL>;
+		reset-gpios = <&gpio0 19 GPIO_ACTIVE_HIGH>;
+		dc-gpios = <&gpio0 23 GPIO_ACTIVE_HIGH>;
+	};
+
+	// at25sf128: at25sf128a@1 {
+	// 	compatible = "jedec,spi-nor";
+	// 	size = <0x8000000>;
+	// 	spi-max-frequency = <32000000>;
+	// 	jedec-id = [1f 89 01];
+	// 	status = "okay";
+	// };
+};
+
+&pwm0 {
+	status = "okay";
+	pinctrl-0 = <&pwm0_default>;
+	pinctrl-1 = <&pwm0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&i2c0 {
+	status = "okay";
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&gpiote {
+    status = "okay";
+};
+
+&radio {
+	status = "okay";
+};
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x0 0xc000>;
+		};
+		slot0_partition: partition@c000 {
+			label = "image-0";
+			reg = <0xc000 0x72000>;
+		};
+		slot1_partition: partition@7e000 {
+			label = "image-1";
+			reg = <0x7e000 0x72000>;
+		};
+		scratch_partition: partition@f0000 {
+			label = "image-scratch";
+			reg = <0xf0000 0xa000>;
+		};
+		storage_partition: partition@fa000 {
+			label = "storage";
+			reg = <0xfa000 0x6000>;
+		};
+	};
+};

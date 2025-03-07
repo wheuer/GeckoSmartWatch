@@ -2,5 +2,4 @@
 # SPDX-License-Identifier: Apache-2.0
 
 config BOARD_SLOTECH_GECKO_DEVELOPMENT_NRF52840
-	bool "Slotech Gecko Development nRF52840"
-	depends on SOC_NRF52840_QFAA
+	select SOC_NRF52840_QFAA
