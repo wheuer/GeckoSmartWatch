@@ -51,7 +51,7 @@ fun StartScreen(
     // Grouping of required permissions to request at once
     val permissionState = rememberMultiplePermissionsState(permissions = PermissionUtils.bluetoothPermissions)
 
-    // Setup a broadcast listener to notify upon changes on bluetooth state
+    // Setup a broadcast listener to notify upon changes on bluetooth enable state
     SystemBroadcastReceiver(systemAction = BluetoothAdapter.ACTION_STATE_CHANGED){bluetoothState ->
         val action = bluetoothState?.action ?: return@SystemBroadcastReceiver
         if (action == BluetoothAdapter.ACTION_STATE_CHANGED){

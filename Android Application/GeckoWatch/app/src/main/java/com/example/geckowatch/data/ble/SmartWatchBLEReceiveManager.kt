@@ -17,10 +17,10 @@ import androidx.annotation.RequiresApi
 import com.example.geckowatch.data.ConnectionState
 import com.example.geckowatch.data.DisconnectRational
 import com.example.geckowatch.data.SmartWatchResult
-import com.example.geckowatch.data.SmartWatchReceiveManager
 import com.example.geckowatch.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
@@ -34,34 +34,37 @@ import java.util.UUID
 class SmartWatchBLEReceiveManager(
     private val bluetoothAdapter: BluetoothAdapter,
     private val context: Context
-) : SmartWatchReceiveManager {
+) {
 
-    // Smart watch specific connection information, used to confirm services
+    companion object {
+        private const val DEVICE_NAME = "Gecko"
+        private const val SMART_WATCH_SERVICE_UUID = "1f96e240-7e6e-452c-ab50-3e0feb504976"
+        private const val BATTERY_LEVEL_CHARACTERISTIC_UUID = "1f96e242-7e6e-452c-ab50-3e0feb504976"
+        private const val NOTIFICATION_CHARACTERISTIC_UUID = "1f96e241-7e6e-452c-ab50-3e0feb504976"
+        private const val UPDATE_WATCH_TIME_CHARACTERISTIC_UUID = "1f96e243-7e6e-452c-ab50-3e0feb504976"
+
+        private const val MAXIMUM_CONNECTION_ATTEMPTS = 5
+    }
+
+    // Smart watch specific connection information, used to confirm services and issue a direct connection
     // The watch only has one BLE service with 2 characteristics,
     //      battery level (read) and notifications (write)
     private var geckoDevice: BluetoothDevice ?= null
-    private val DEVICE_NAME = "Gecko"
-    private val SMART_WATCH_SERVICE_UUID = "1f96e240-7e6e-452c-ab50-3e0feb504976"
-    private val BATTERY_LEVEL_CHARACTERISTIC_UUID = "1f96e242-7e6e-452c-ab50-3e0feb504976"
-    private val NOTIFICATION_CHARACTERISTIC_UUID = "1f96e241-7e6e-452c-ab50-3e0feb504976"
-    private val UPDATE_WATCH_TIME_CHARACTERISTIC_UUID = "1f96e243-7e6e-452c-ab50-3e0feb504976"
 
     // Shared data with anyone (just our view model) that wants to be updated on connection state
-    override val data: MutableSharedFlow<Resource<SmartWatchResult>> = MutableSharedFlow()
-    private var isScanning = false
-    private var connectionStatus: ConnectionState ?= null
+    val data: MutableSharedFlow<SmartWatchResult> = MutableSharedFlow()
+    @Volatile private var isScanning = false
+    @Volatile private var connectionStatus: ConnectionState = ConnectionState.Uninitialized
     private val coroutineScope = CoroutineScope(Dispatchers.Default) // Used to send the messages
 
     /*
        BLE Scanner variables
     */
     private var disconnectRational: DisconnectRational = DisconnectRational.None
-    private var currentConnectionAttempt = 1
-    private val MAXIMUM_CONNECTION_ATTEMPTS = 5
+    private var currentConnectionAttempt = 0
     private val bleScanner by lazy {
         bluetoothAdapter.bluetoothLeScanner
     }
-
     private val scanSettings = ScanSettings.Builder()
         .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
         .build()
@@ -72,114 +75,110 @@ class SmartWatchBLEReceiveManager(
             if (result.device.name == DEVICE_NAME){
                 // Let anyone listening that we found the watch
                 coroutineScope.launch {
-                    data.emit(Resource.Loading(message = "Connecting to device..."))
+                    data.emit(SmartWatchResult(0.0f, connectionStatus, "Connecting to device..."))
                 }
 
                 // Attempt to make the connection
-                if (isScanning) {
-                    // We use autoConnect false here to immediately connect but not issue reconnects
-                    //      if we are disconnected we then re-issue the connect with auto connect
-                    geckoDevice = result.device
-                    result.device.connectGatt(context, false, gattCallback)
-                    isScanning = false
-                    bleScanner.stopScan(this)
-                }
+                // We use autoConnect false here to immediately connect but not issue reconnects
+                //      for a faster connection process. If we are disconnected we then re-issue
+                //      the connection with auto connect enabled.
+                geckoDevice = result.device
+                result.device.connectGatt(context, false, gattCallback)
+                bleScanner.stopScan(this)
+                isScanning = false
             }
         }
     }
 
     /*
-       GATT: The gatt object is the final object we interact with once we are connected
+       GATT instance representing our active connection
     */
     private var gatt: BluetoothGatt? = null
 
     private val gattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(incomingGatt: BluetoothGatt, status: Int, newState: Int) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                // We are connected, need to setup the watches services
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    Log.i("BLE GATT STATE", "CONNECTED")
-                    // Let anyone listening know we are continuing the connection process
-                    connectionStatus = ConnectionState.Connected
-                    currentConnectionAttempt = 1
-                    coroutineScope.launch {
-                        data.emit(Resource.Loading(message = "Discovering Services..."))
-                    }
-                    gatt = incomingGatt
-                    incomingGatt.discoverServices()
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.i("BLE GATT STATE", "DISCONNECTED")
-                    // We could have disconnected forcefully though disconnect(), closeConnection()
-                    //      or we simply disconnected due to a timeout etc. We will know by the
-                    //      current state of the connection status
-                    when (disconnectRational) {
-                        DisconnectRational.None -> {
-                            // In theory this should never be hit as we are only here in the callback
-                            //      if we were the ones that issued the disconnect?
-                            // We were previously connected and want to stay connected, so start
-                            //      a sticky reconnect and acknowledge the disconnection
-                            connectionStatus = ConnectionState.Disconnected
-                            issueStickyBluetoothConnection()
+            when (status) {
+                BluetoothGatt.GATT_SUCCESS -> {
+                    when (newState) {
+                        BluetoothProfile.STATE_CONNECTED -> {
+                            connectionStatus = ConnectionState.Connected
+                            currentConnectionAttempt = 0
+                            gatt = incomingGatt
+                            incomingGatt.discoverServices()
                             coroutineScope.launch {
-                                data.emit(Resource.Success(data = SmartWatchResult(0f, ConnectionState.Disconnected)))
+                                data.emit(SmartWatchResult(0.0f, connectionStatus, "Discovering Services..."))
                             }
                         }
-                        DisconnectRational.Close -> {
-                            // We have intentionally disconnected and want to close the connection
-                            incomingGatt.close()
-                            connectionStatus = ConnectionState.Uninitialized
-                            disconnectRational = DisconnectRational.None
-                            gatt = null
-                            coroutineScope.launch {
-                                data.emit(Resource.Success(data = SmartWatchResult(0f, ConnectionState.Uninitialized)))
-                            }
-                        }
-                        DisconnectRational.Disconnect -> {
-                            // We have intentionally disconnected but want to keep the gatt open
-                            connectionStatus = ConnectionState.Disconnected
-                            disconnectRational = DisconnectRational.None
-                            coroutineScope.launch {
-                                data.emit(Resource.Success(data = SmartWatchResult(0f, ConnectionState.Disconnected)))
+                        BluetoothProfile.STATE_DISCONNECTED -> {
+                            when (disconnectRational) {
+                                DisconnectRational.None -> {
+                                    // Unwanted disconnect, try a sticky reconnect
+                                    connectionStatus = ConnectionState.Disconnected
+                                    issueStickyBluetoothConnection()
+                                    coroutineScope.launch {
+                                        data.emit(SmartWatchResult(0.0f, connectionStatus, "Unwanted Disconnect"))
+                                    }
+                                }
+                                DisconnectRational.Disconnect -> {
+                                    connectionStatus = ConnectionState.Disconnected
+                                    disconnectRational = DisconnectRational.None
+                                    coroutineScope.launch {
+                                        data.emit(SmartWatchResult(0.0f, connectionStatus, "Disconnect successful"))
+                                    }
+                                }
+                                DisconnectRational.Close -> {
+                                    incomingGatt.close()
+                                    gatt = null
+                                    connectionStatus = ConnectionState.Uninitialized
+                                    disconnectRational = DisconnectRational.None
+                                    coroutineScope.launch {
+                                        data.emit(SmartWatchResult(0.0f, connectionStatus, "GATT closed"))
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            } else {
-                Log.i("BLE GATT STATE", "ERROR")
-                // Connection state changed/failed without us requesting it. Our action will depend
-                //      on if we were currently connected or not
-                if (connectionStatus == ConnectionState.Connected) {
-                    // We were connected but somehow got disconnected, issue a sticky reconnect
-                    connectionStatus = ConnectionState.Disconnected
-                    issueStickyBluetoothConnection()
-                    coroutineScope.launch {
-                        data.emit(Resource.Success(data = SmartWatchResult(0f, ConnectionState.Disconnected)))
-                    }
-                } else {
-                    // We were not connected os we either tried and failed to connect or we failed a reconnect
-                    //      in either case just reset and if we have more attempts, start over
-                    incomingGatt.close()
-                    connectionStatus = ConnectionState.Uninitialized
-
-                    // Decide whether we continue to try connecting
-                    if (currentConnectionAttempt <= MAXIMUM_CONNECTION_ATTEMPTS){
-                        // Let the system know we failed to connect but are still trying
-                        currentConnectionAttempt += 1
-                        coroutineScope.launch {
-                            data.emit(
-                                Resource.Loading(message = "Attempting to connect $currentConnectionAttempt/$MAXIMUM_CONNECTION_ATTEMPTS")
-                            )
+                else -> {
+                    // Some sort of GATT connection error, could be a timeout or a generic disconnect
+                    when (newState) {
+                        BluetoothProfile.STATE_CONNECTED -> {
+                            // This is a weird scenario, we have an error but we are still connected
+                            connectionStatus = ConnectionState.Connected
+                            currentConnectionAttempt = 0
+                            gatt = incomingGatt
+                            coroutineScope.launch {
+                                data.emit(SmartWatchResult(0.0f, connectionStatus, "Error but connected"))
+                            }
                         }
-                        // Restart the connection process, indicate we are still scanning so our
-                        //      connection attempts message doesn't get overridden
-                        isScanning = true
-                        startReceiving()
-                    } else {
-                        // We have exhausted our timeout, user will have to re-initiate
-                        connectionStatus = ConnectionState.Uninitialized
-                        isScanning = false
-                        coroutineScope.launch {
-                            data.emit(Resource.Error(errorMessage = "Could not connect to BLE device"))
+                        BluetoothProfile.STATE_DISCONNECTED -> {
+                            if (connectionStatus == ConnectionState.Connected) {
+                                // We were connected but an error caused a disconnect, try to reconnect
+                                connectionStatus = ConnectionState.Disconnected
+                                issueStickyBluetoothConnection()
+                                coroutineScope.launch {
+                                    data.emit(SmartWatchResult(0.0f, connectionStatus, "Unwarranted Disconnect. Trying to connect..."))
+                                }
+                            } else {
+                                // We were not connected so we were trying to connect but failed
+                                // Restart connection process if we haven't exhausted our retry attempts
+                                incomingGatt.close()
+                                connectionStatus = ConnectionState.Uninitialized
+                                gatt = null
+                                if (currentConnectionAttempt <= MAXIMUM_CONNECTION_ATTEMPTS) {
+                                    currentConnectionAttempt += 1
+                                    coroutineScope.launch {
+                                        data.emit(SmartWatchResult(0.0f, connectionStatus, "Attempting to connect $currentConnectionAttempt/$MAXIMUM_CONNECTION_ATTEMPTS"))
+                                    }
+                                    startReceiving()
+                                } else {
+                                    // We have exhausted our timeout, user will have to re-initiate
+                                    currentConnectionAttempt = 0
+                                    coroutineScope.launch {
+                                        data.emit(SmartWatchResult(0.0f, connectionStatus, "Could not connect to Gecko"))
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -189,21 +188,20 @@ class SmartWatchBLEReceiveManager(
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             with (gatt) {
                 // We have successfully read the available services, try to increase the MTU size
-                //  We'd prefer a larger MTU size so we can send larger blocks of data at one time
+                // We'd prefer a larger MTU size so we can send larger blocks of data at one time
                 printGattTable()
                 coroutineScope.launch {
-                    data.emit(Resource.Loading(message = "Adjusting MTU space..."))
+                    data.emit(SmartWatchResult(0.0f, connectionStatus, "Adjusting MTU space..."))
                 }
                 gatt.requestMtu(517)
             }
         }
 
         override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
-            // Once the MTU size is updated we are done with the connection process and can let
-            //  the user know that we are officially connected
+            // Once the MTU size is updated we are done with the complete connection process
             Log.d("BluetoothGatt", "MTU was updated to $mtu")
             coroutineScope.launch {
-                data.emit(Resource.Success(data = SmartWatchResult(0.0f, ConnectionState.Connected)))
+                data.emit(SmartWatchResult(0.0f, connectionStatus, "MTU Updated to $mtu"))
             }
         }
 
@@ -218,13 +216,12 @@ class SmartWatchBLEReceiveManager(
                 UUID.fromString(BATTERY_LEVEL_CHARACTERISTIC_UUID) -> {
                     when (status) {
                         BluetoothGatt.GATT_SUCCESS -> {
-                            // Log the battery voltage and let the user know
                             // Data comes in little endian
                             Log.i("BluetoothGattCallback", "Incoming battery voltage byte array: ${value.toHexString()}")
                             val buffer = ByteBuffer.wrap(value).order(ByteOrder.LITTLE_ENDIAN)
                             val batteryVoltage = buffer.float
                             coroutineScope.launch {
-                                data.emit(Resource.Success(data = SmartWatchResult(batteryVoltage, ConnectionState.Connected)))
+                                data.emit(SmartWatchResult(batteryVoltage, connectionStatus, "Voltage Updated"))
                             }
                         }
                         else -> {
@@ -254,31 +251,34 @@ class SmartWatchBLEReceiveManager(
         joinToString(separator = " ", prefix = "0x") { String.format("%02X", it) }
 
     private fun issueStickyBluetoothConnection() {
+        currentConnectionAttempt = 0
         geckoDevice?.connectGatt(context, true, gattCallback)
     }
-
 
     /*
        Public functions to interact with
     */
     // This is the entry point for starting the connection process, it is the only pre connected
     //      function that is called
-    override fun startReceiving() {
-        // Start scanning for BLE devices
-        bleScanner.startScan(null, scanSettings, scanCallback)
+    fun startReceiving() {
+        // Although the disconnect and close process is asynchronous, the scanning will issue
+        //      connection retries until the close process is finished (if it doesn't finish immediately)
+        if (connectionStatus != ConnectionState.Uninitialized) closeConnection()
 
         // Let anyone that is listening know that we are scanning
         // If we are already scanning and this is a re-attempt, don't override previous message
-        connectionStatus = ConnectionState.CurrentlyInitializing
         if (!isScanning) {
+            currentConnectionAttempt = 0
+            bleScanner.startScan(null, scanSettings, scanCallback)
             isScanning = true
+            connectionStatus = ConnectionState.CurrentlyInitializing
             coroutineScope.launch {
-                data.emit(Resource.Loading(message = "Scanning BLE devices..."))
+                data.emit(SmartWatchResult(0.0f, connectionStatus, "Scanning BLE devices..."))
             }
         }
     }
 
-    override fun readBatteryVoltage(){
+    fun readBatteryVoltage() {
         if (connectionStatus == ConnectionState.Connected) {
             // Get battery characteristic's handle
             val batteryLevelCharacteristic =
@@ -293,8 +293,7 @@ class SmartWatchBLEReceiveManager(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun writeNotification(payload: ByteArray) {
+    fun writeNotification(payload: ByteArray) {
         // This will only send the payload it will not formulate the notification
         if (connectionStatus == ConnectionState.Connected) {
             // Get notification characteristic's handle
@@ -321,9 +320,7 @@ class SmartWatchBLEReceiveManager(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun updateWatchTime() {
-        // This will only send the payload it will not formulate the notification
+    fun updateWatchTime() {
         if (connectionStatus == ConnectionState.Connected) {
             // Get notification characteristic's handle
             val notificationCharacteristic =
@@ -360,45 +357,57 @@ class SmartWatchBLEReceiveManager(
         }
     }
 
-    // Quick getter to know if we are connected
-    override fun getConnectionState(): ConnectionState? {
+    fun getConnectionState(): ConnectionState {
         return connectionStatus
     }
 
-    // Attempt to reconnect to the watch after being disconnected
-    override fun reconnect() {
+    fun reconnect() {
         gatt?.connect()
     }
 
     // Force disconnect from the watch, this does not void the connection just disconnects
-    override fun disconnect() {
-        disconnectRational = DisconnectRational.Disconnect
-        gatt?.disconnect()
+    fun disconnect() {
+        if (gatt != null) {
+            disconnectRational = DisconnectRational.Disconnect
+            gatt?.disconnect()
+        }
     }
 
     // Force disconnect and completely close the connection, after calling you will need to
     //     start connection process over
     // This function is useful to stop the scanning process if the watch is not being found
-    override fun closeConnection() {
-        // Stop the scan if it was in progress
+    fun closeConnection() {
+        // Force stop any active scan in case it's results try to issue a connection
         bleScanner.stopScan(scanCallback)
         isScanning = false
 
-        // If we are already disconnected, just de-init the gatt connection
-        if (connectionStatus == ConnectionState.Disconnected) {
-            connectionStatus = ConnectionState.Uninitialized
-            disconnectRational = DisconnectRational.None
-            gatt = null
-            coroutineScope.launch {
-                data.emit(Resource.Success(data = SmartWatchResult(0f, ConnectionState.Uninitialized)))
+        when (connectionStatus) {
+            ConnectionState.Connected -> {
+                // We do not call gatt.close() until we disconnect successfully
+                // The closing process will finish in the gatt onConnectionChange callback
+                disconnectRational = DisconnectRational.Close
+                gatt?.disconnect()
             }
-        } else {
-            // We do not call gatt.close() until the disconnect was successful
-            disconnectRational = DisconnectRational.Close
-            gatt?.disconnect()
+            ConnectionState.Disconnected -> {
+                // If we are already disconnected we can immediately close the gatt connection
+                connectionStatus = ConnectionState.Uninitialized
+                disconnectRational = DisconnectRational.None
+                gatt?.close()
+                gatt = null
+                coroutineScope.launch {
+                    data.emit(SmartWatchResult(0.0f, connectionStatus, "Gatt Closed"))
+                }
+            }
+            else -> {
+                // If we aren't/weren't connected just reset entire connection state
+                connectionStatus = ConnectionState.Uninitialized
+                disconnectRational = DisconnectRational.None
+                gatt = null
+                coroutineScope.launch {
+                    data.emit(SmartWatchResult(0.0f, connectionStatus, "Reset Connection State"))
+                }
+            }
         }
     }
-
-
 
 }

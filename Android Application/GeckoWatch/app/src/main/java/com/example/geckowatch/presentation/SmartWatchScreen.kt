@@ -1,6 +1,8 @@
 package com.example.geckowatch.presentation
 
 import android.bluetooth.BluetoothAdapter
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -99,6 +101,7 @@ fun SmartWatchScreen(
                     // We are connected to the watch and ready to talk to it
                     // Display that we are connected and offer the ability to disconnect or read battery voltage
                     Text("Connected.")
+                    Text("Status Message: ${viewModel.statusMessage}")
                     Text("Battery Voltage: ${viewModel.batteryVoltage}")
                     Button(
                         onClick = {
@@ -130,6 +133,7 @@ fun SmartWatchScreen(
                     // We were previously connected and have been disconnected
                     // Display that we have been disconnected and offer to try and reconnect
                     Text("Disconnected.")
+                    Text("Status Message: ${viewModel.statusMessage}")
                     Button(
                         onClick = {
                             viewModel.reconnect()
@@ -138,23 +142,21 @@ fun SmartWatchScreen(
                     ) {
                         Text(text = "Attempt Reconnect")
                     }
-                    Button(
-                        onClick = {
-                            viewModel.closeConnection()
-
-                        },
-                        shape = RoundedCornerShape(20.dp)
-                    ) {
-                        Text(text = "Close Connection")
-                    }
                 }
 
                 ConnectionState.Error -> {
                     // We got an error while trying to connect or some other error
-                    // Display the error message but don't offer anything just yet
-                    // TODO: Depending on the error states we implement maybe handle differently
+                    // Display the error message, user should probably just force close
                     Text("Error: ${viewModel.statusMessage}")
                 }
+            }
+            Button(
+                onClick = {
+                    viewModel.closeConnection()
+                },
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Text(text = "Force Reset/Close")
             }
         }
     }

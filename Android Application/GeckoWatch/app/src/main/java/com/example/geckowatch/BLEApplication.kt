@@ -12,7 +12,6 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
-import com.example.geckowatch.data.SmartWatchReceiveManager
 import com.example.geckowatch.data.ble.SmartWatchBLEReceiveManager
 import com.example.geckowatch.presentation.permissions.PermissionUtils
 
@@ -20,7 +19,7 @@ class BLEApplication : Application() {
 
     private lateinit var bluetoothManager: BluetoothManager
     private lateinit var bluetoothAdapter: BluetoothAdapter
-    private lateinit var smartWatchReceiveManager: SmartWatchReceiveManager
+    private lateinit var smartWatchReceiveManager: SmartWatchBLEReceiveManager
 
     private var bluetoothPermissionsState: Boolean = false
     private var notificationListenerPermissionState: Boolean = false
@@ -88,7 +87,7 @@ class BLEApplication : Application() {
         return this.bluetoothAdapter
     }
 
-    fun getGeckoBLEManager(): SmartWatchReceiveManager {
+    fun getGeckoBLEManager(): SmartWatchBLEReceiveManager {
         return this.smartWatchReceiveManager
     }
 

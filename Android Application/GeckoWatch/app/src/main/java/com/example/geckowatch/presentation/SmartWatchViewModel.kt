@@ -1,6 +1,8 @@
 package com.example.geckowatch.presentation
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -8,13 +10,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.geckowatch.data.ConnectionState
-import com.example.geckowatch.data.SmartWatchReceiveManager
-import com.example.geckowatch.util.Resource
+import com.example.geckowatch.data.ble.SmartWatchBLEReceiveManager
 import kotlinx.coroutines.launch
 
 class SmartWatchViewModel() : ViewModel() {
 
-    private var smartWatchReceiveManager: SmartWatchReceiveManager ?= null
+    private var smartWatchReceiveManager: SmartWatchBLEReceiveManager ?= null
 
     // Permission state variables
     var bluetoothPermissionsState by mutableStateOf<Boolean>(false)
@@ -42,11 +43,12 @@ class SmartWatchViewModel() : ViewModel() {
         Log.i("VIEW MODEL", "Permissions Updated")
     }
 
-    fun setBLEManger(bleManager: SmartWatchReceiveManager) {
-        if (smartWatchReceiveManager == null) {
-            smartWatchReceiveManager = bleManager
-            connectionState = bleManager.getConnectionState() ?: ConnectionState.Uninitialized
-        }
+    fun setBLEManger(bleManager: SmartWatchBLEReceiveManager) {
+        smartWatchReceiveManager = bleManager
+
+        // Update state and subscribe to new changes
+        connectionState = bleManager.getConnectionState()
+        subscribeToChanges()
     }
 
     // Function to listen for changes in our BLE manager, done through MutableSharedFlow
@@ -54,32 +56,15 @@ class SmartWatchViewModel() : ViewModel() {
     private fun subscribeToChanges(){
         viewModelScope.launch {
             smartWatchReceiveManager?.data?.collect{ result ->
-                when (result){
-                    is Resource.Success -> {
-                        connectionState = result.data.connectionState
-                        batteryVoltage = result.data.batteryVoltage
-                    }
-
-                    is Resource.Loading -> {
-                        statusMessage = result.message
-                        connectionState = ConnectionState.CurrentlyInitializing
-                    }
-
-                    is Resource.Error -> {
-                        statusMessage = result.errorMessage
-                        connectionState = ConnectionState.Error
-                    }
-                }
+                connectionState = result.connectionState
+                statusMessage = result.message
+                batteryVoltage = result.batteryVoltage
             }
         }
     }
 
     // Start the BLE scan/connection process through our BLE manager
     fun initializeConnection() {
-        // Make sure we get updated to the change in BLE connection state
-        subscribeToChanges()
-
-        // Start the process of connecting to watch
         smartWatchReceiveManager?.startReceiving()
     }
 
@@ -88,7 +73,7 @@ class SmartWatchViewModel() : ViewModel() {
     }
 
     fun disconnect(){
-        smartWatchReceiveManager?.disconnect() // Just disconnect but remember connection info
+        smartWatchReceiveManager?.disconnect()
     }
 
     fun reconnect(){

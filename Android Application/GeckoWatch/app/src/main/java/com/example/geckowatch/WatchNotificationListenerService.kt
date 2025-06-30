@@ -5,60 +5,67 @@ import android.os.IBinder
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
-import android.widget.Toast
 import com.example.geckowatch.data.ConnectionState
-import com.example.geckowatch.data.SmartWatchReceiveManager
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.geckowatch.data.ble.SmartWatchBLEReceiveManager
 import java.util.TimeZone
-import javax.inject.Inject
 
 class WatchNotificationListenerService : NotificationListenerService() {
 
-    private lateinit var smartWatchReceiveManager: SmartWatchReceiveManager
+    private lateinit var smartWatchReceiveManager: SmartWatchBLEReceiveManager
+
+    private val blockedPackages = setOf(
+        "com.google.android.apps.maps",
+        "com.google.android.apps.authenticator2",
+        "com.azure.authenticator",
+        "com.google.android.youtube",
+        "com.spotify.music"
+    )
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         if (sbn != null) {
-            Log.i("WatchNotificationListener",
-                "New Notification, App Name: " +
-                        "${packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0))}")
-        }
+            if (sbn.packageName in blockedPackages) return
 
-        if (smartWatchReceiveManager.getConnectionState() == ConnectionState.Connected) {
-            // The watch expects the notification in the format,
-            //      appName:title:bodyText:timestamp
-            // Because it is using the ':' as a delimiter we have to scan through and replace them
-            //      probably replace them with a ; for now, we could have a customer code to look
-            //      for on the watch, but the difference between a ':' and a ';' on the small screen
-            //      is pretty small
-            if (sbn != null) {
+            Log.i("WatchNotificationListener", "New Notification, App Name: " +
+                    "${packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0))}"
+            )
+
+            if (smartWatchReceiveManager.getConnectionState() == ConnectionState.Connected) {
+                // The watch expects the notification in the format,
+                //      appName:title:bodyText:timestamp
+                // Because it is using the ':' as a delimiter we have to scan through and replace them
+                //      probably replace them with a ; for now, we could have a customer code to look
+                //      for on the watch, but the difference between a ':' and a ';' on the small screen
+                //      is pretty small
                 val notificationStringBuilder = StringBuilder()
 
                 // App name
                 notificationStringBuilder.append(
-                    packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0))
-                        .toString().replace(":", ";"))
+                    packageManager.getApplicationLabel(
+                        packageManager.getApplicationInfo(
+                            sbn.packageName,
+                            0
+                        )
+                    )
+                        .toString().replace(":", ";")
+                )
                 notificationStringBuilder.append(":")
 
                 // Notification Title
                 notificationStringBuilder.append(
-                    sbn.notification.extras.getString("android.title")
-                        ?.replace(":", ";") ?: "[No Title]"
+                    sbn.notification.extras.getString("android.title")?.replace(":", ";") ?: "[No Title]"
                 )
                 notificationStringBuilder.append(":")
 
                 // Notification Text
                 notificationStringBuilder.append(
-                    sbn.notification.extras.getString("android.text")
-                        ?.replace(":", ";") ?: "[No Text]"
+                    sbn.notification.extras.getString("android.text")?.replace(":", ";") ?: "[No Text]"
                 )
                 notificationStringBuilder.append(":")
 
                 // Notification Timestamp, accounting for time zone and daylight savings
                 val timestamp = (sbn.postTime + TimeZone.getDefault().getOffset(sbn.postTime)) / 1000
                 Log.i("NotificationSending", "Timestamp $timestamp")
-                notificationStringBuilder.append(
-                    timestamp.toString().replace(":", ";")
-                )
+                notificationStringBuilder.append(timestamp.toString().replace(":", ";"))
 
                 Log.i("WatchNotificationListener", "Sending Notification: $notificationStringBuilder")
                 smartWatchReceiveManager.writeNotification(notificationStringBuilder.toString().toByteArray(Charsets.UTF_8))

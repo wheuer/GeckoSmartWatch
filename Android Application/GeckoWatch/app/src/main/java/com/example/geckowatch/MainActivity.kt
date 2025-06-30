@@ -17,7 +17,7 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
-import com.example.geckowatch.data.SmartWatchReceiveManager
+import com.example.geckowatch.data.ble.SmartWatchBLEReceiveManager
 import com.example.geckowatch.presentation.Navigation
 import com.example.geckowatch.presentation.SmartWatchViewModel
 import com.example.geckowatch.ui.theme.GeckoWatchTheme
@@ -25,7 +25,7 @@ import com.example.geckowatch.ui.theme.GeckoWatchTheme
 class MainActivity : ComponentActivity() {
 
     private lateinit var bluetoothAdapter: BluetoothAdapter
-    private lateinit var smartWatchReceiveManager: SmartWatchReceiveManager
+    private lateinit var smartWatchReceiveManager: SmartWatchBLEReceiveManager
 
     private lateinit var appContext: BLEApplication
 
@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
         // Grab our BLE manager
         smartWatchReceiveManager = appContext.getGeckoBLEManager()
 
-        // Force pass our BLE manger to our view model don't @ me dEpEnDeNcY iNjEcTiOn Is BeTtEr
+        // Force pass our BLE manager to our view model don't @ me dEpEnDeNcY iNjEcTiOn Is BeTtEr
         watchViewModel.setBLEManger(smartWatchReceiveManager)
 
         setContent {
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // This function requests te basic bluetooth permissions
+    // This function requests the basic bluetooth permissions
     private fun requestBluetoothPermissions(){
         when {
             ContextCompat.checkSelfPermission(
